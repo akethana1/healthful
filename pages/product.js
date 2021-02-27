@@ -61,6 +61,15 @@ export default function Product() {
       <input type='file' id='ml-food' accept='.jpg' className='FILE-INPUT' />
       <img src='' className='SELECTED-IMAGE' />
       <button className='PREDICT-BUTTON'>Predict</button>
+
+      <form>
+        <input type='radio' name='dietary-restriction' id='vegan' />
+        <label htmlFor='vegan'>Vegan</label>
+        <input type='radio' name='dietary-restriction' id='vegetarian' />
+        <label htmlFor='vegetarian'>Vegetarian</label>
+      </form>
+
+      <p>{content}</p>
     </main>
   );
 }

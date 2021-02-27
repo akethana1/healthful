@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
+import time
 
 # Initiate the path for the chrome driver and create the list.
 PATH = "C:\Program Files (x86)\chromedriver.exe"
@@ -30,8 +31,12 @@ for urls in food:
         url_list.append('https://www.bbc.co.uk' + urls['href'])
 
 # randomizes the recipe that will be picked for that certain ingredient
-final_url = url_list[random.randint(0, len(url_list))]
-final_url = url_list[0]
+final_url = url_list[random.randint(0, len(url_list)-1)]
+url_list.remove(final_url)
+final_url1 = url_list[random.randint(0, len(url_list)-1)]
+url_list.remove(final_url1)
+final_url2 = url_list[random.randint(0, len(url_list)-1)]
+url_list.remove(final_url2)
 driver.get(final_url)  # open up the recipe's url for parsing and getting html data
 
 
@@ -58,3 +63,59 @@ print(div.text)
 div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
 print('\n')
 print(div2.text)
+print('------------------------------------------------------------------------------------------\n')
+
+
+driver.get(final_url1)
+req = requests.get(final_url1).text
+soup2 = BeautifulSoup(req, 'lxml')
+try:
+    img = soup2.find("div", {"class": "recipe-media"}).find("img")
+    image = img['src']
+    print(image + '\n')
+except:
+    print('There is no image \n')
+
+prep = soup2.find('div', class_="recipe-leading-info")
+prep = prep.find_all('div', class_="gel-pica")
+print(prep[0].text)
+print(prep[1].text)
+print(prep[2].text)
+
+title = driver.find_element_by_class_name('gel-trafalgar')
+print('Title:' + title.text +'\n')
+
+div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+print(div.text)
+div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+print('\n')
+print(div2.text)
+print('------------------------------------------------------------------------------------------\n')
+
+driver.get(final_url2)
+req = requests.get(final_url2).text
+soup2 = BeautifulSoup(req, 'lxml')
+try:
+    img = soup2.find("div", {"class": "recipe-media"}).find("img")
+    image = img['src']
+    print(image + '\n')
+except:
+    print('There is no image \n')
+
+prep = soup2.find('div', class_="recipe-leading-info")
+prep = prep.find_all('div', class_="gel-pica")
+print(prep[0].text)
+print(prep[1].text)
+print(prep[2].text)
+
+title = driver.find_element_by_class_name('gel-trafalgar')
+print('Title:' + title.text +'\n')
+
+div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+print(div.text)
+div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+print('\n')
+print(div2.text)
+
+time.sleep(5)
+driver.close()

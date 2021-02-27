@@ -1,11 +1,9 @@
-from msilib.schema import RadioButton
-
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
 
-PATH = "C:\Program Files (x86)\chromedriver.exe"
+PATH = "./chromedriver"
 veg_fruit = ['cucumber', 'carrot', 'capsicum', 'onion', 'potato', 'tomato', 'beetroot', 'cabbage', 'lettuce', 'spinach', 'cauliflower', 'turnip', 'corn', 'sweetcorn', 'sweet_potato', 'paprika', 'ginger', 'garlic', 'pea', 'banana', 'apple', 'pear', 'grapes', 'orange', 'kiwi', 'watermelon', 'pomegranate', 'pineapple', 'mango']
 
 choice = input('Choose a vegetable/fruit:').lower()

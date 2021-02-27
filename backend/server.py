@@ -6,15 +6,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
-# MACHINE LEARNING
-# import base64
-# import numpy as np
-# import io
-# from PIL import Image
-# import keras
-# from keras import backend as K
-# from keras.models import Sequential, load_model
-# from keras.preprocessing.image import ImageDataGenerator, img_to_array
 
 # FLASK SERVER
 app = Flask(__name__)
@@ -24,44 +15,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # WEB SCRAPING GLOBAL VARIABLES
 PATH = "./chromedriver"
 veg_fruit = ['cucumber', 'carrot', 'capsicum', 'onion', 'potato', 'tomato', 'beetroot', 'cabbage', 'lettuce', 'spinach', 'cauliflower', 'turnip', 'corn', 'sweetcorn', 'sweet_potato', 'paprika', 'ginger', 'garlic', 'pea', 'banana', 'apple', 'pear', 'grapes', 'orange', 'kiwi', 'watermelon', 'pomegranate', 'pineapple', 'mango']
-
-# LOADING MACHINE LEARNING CODE
-# def get_model():
-#   global model
-#   model = load_model('VGG16_cats_and_dogs.h5')
-#   print('*** MODEL LOADED ***')
-
-# def preprocess_image(image, target_size):
-#   if image.mode != 'RGB':
-#     image = image.convert('RGB')
-#   image = image.resize(target_size)
-#   image = img_to_array(image)
-#   image = np.expand_dims(image, axis=0)
-#   return image
-
-# print('*** LOADING KERAS MODEL ***')
-# get_model()
-
-
-
-# API ENDPOINT ROUTES
-@app.route('/predict', methods=['POST'])
-def predict():
-  message = request.get_json(force=True)
-  encoded = message['image']
-  decoded = base64.b64decode(encoded)
-  image = Image.open(io.BytesIO(decoded))
-  processed_image = preprocess_image(image, target_size=(224, 224))
-
-  prediction = model.predict(processed_image).tolist()
-
-  response = {
-    'prediction': {
-      'dog': prediction[0][0],
-      'cat': prediction[0][1]
-    }
-  }
-  return jsonify(response)
 
 @app.route('/form', methods=['POST'])
 def form():
@@ -76,7 +29,6 @@ def form():
         'error': 'Please enter a food in our database'
       }
       return jsonify(response)
-
 
   driver = webdriver.Chrome(PATH)
   req = requests.get(bbc_url).text
@@ -102,7 +54,6 @@ def form():
     'method': method
   }
   return jsonify(response)
-
 
 if __name__ == "__main__":
   app.run()

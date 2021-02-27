@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
-<<<<<<< HEAD
 # MACHINE LEARNING
 import base64
 import io
@@ -17,7 +16,6 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.densenet import preprocess_input, decode_predictions
 
 
-=======
 import time
 from flask_wtf import FlaskForm
 from wtforms import RadioField, SubmitField
@@ -38,7 +36,6 @@ class FieldsRequiredForm(FlaskForm):
 class Restrictions(FieldsRequiredForm):
     q1 = RadioField('Do you have any dietary restrictions', choices=[("Vegan", "Vegan"), ("Vegetarian", "Vegetarian"),("None", "None")])
     submit = SubmitField('Check you Answers')
->>>>>>> 331f229faa34e7f98a6b7ccc32278ac46433dc20
 
 # FLASK SERVER
 app = Flask(__name__)

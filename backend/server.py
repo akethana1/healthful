@@ -6,13 +6,33 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
+# MACHINE LEARNING
+import base64
+import io
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.densenet import preprocess_input, decode_predictions
+
+
 
 # FLASK SERVER
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-# WEB SCRAPING GLOBAL VARIABLES
+def preprocess_image(img, target_size):
+  if img.mode != 'RGB':
+    img = img.convert('RGB')
+  img = img.resize(target_size)
+  img = image.img_to_array(img)
+  img = np.expand_dims(img, axis=0)
+  return img
+
+
+
+# WEB SCRAPING
 PATH = "./chromedriver"
 veg_fruit = ['cucumber', 'carrot', 'capsicum', 'onion', 'potato', 'tomato', 'beetroot', 'cabbage', 'lettuce', 'spinach', 'cauliflower', 'turnip', 'corn', 'sweetcorn', 'sweet_potato', 'paprika', 'ginger', 'garlic', 'pea', 'banana', 'apple', 'pear', 'grapes', 'orange', 'kiwi', 'watermelon', 'pomegranate', 'pineapple', 'mango']
 
@@ -53,6 +73,41 @@ def form():
     'ingredients': ingredients,
     'method': method
   }
+  return jsonify(response)
+
+
+
+# MACHINE LEARNING
+@app.route('/predict', methods=['POST'])
+def predict():
+  message = request.get_json(force=True)
+  decoded_image = base64.b64decode(message['image'])
+  pil_img = Image.open(io.BytesIO(decoded_image))
+  processed_image = preprocess_image(pil_img, target_size=(224, 224))
+
+  interpreter = tf.lite.Interpreter(model_path="./model.tflite")
+  interpreter.allocate_tensors()
+  x = preprocess_input(processed_image)
+  input_details = interpreter.get_input_details()
+  output_details = interpreter.get_output_details()
+  interpreter.set_tensor(input_details[0]['index'], x)
+  interpreter.invoke()
+  output_data = interpreter.get_tensor(output_details[0]['index'])
+  label_array=['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli pepper', 'corn', 'cucumber', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelo']
+  max=0
+  label_loc=0
+  for i in range (0,len(output_data[0])):
+      if(output_data[0][i]>max):
+          max=output_data[0][i]
+          label_loc=i
+  prediction = label_array[label_loc]
+
+
+
+  response = {
+    'prediction': prediction
+  }
+
   return jsonify(response)
 
 if __name__ == "__main__":

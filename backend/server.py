@@ -6,6 +6,26 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
+import time
+from flask_wtf import FlaskForm
+from wtforms import RadioField, SubmitField
+from wtforms.validators import DataRequired
+
+
+class FieldsRequiredForm(FlaskForm):
+    """Require all fields to have content. This works around the bug that WTForms radio
+    fields don't honor the `DataRequired` or `InputRequired` validators.
+    """
+
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
+
+
+class Restrictions(FieldsRequiredForm):
+    q1 = RadioField('Do you have any dietary restrictions', choices=[("Vegan", "Vegan"), ("Vegetarian", "Vegetarian"),("None", "None")])
+    submit = SubmitField('Check you Answers')
 
 # FLASK SERVER
 app = Flask(__name__)
@@ -16,19 +36,39 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 PATH = "./chromedriver"
 veg_fruit = ['cucumber', 'carrot', 'capsicum', 'onion', 'potato', 'tomato', 'beetroot', 'cabbage', 'lettuce', 'spinach', 'cauliflower', 'turnip', 'corn', 'sweetcorn', 'sweet_potato', 'paprika', 'ginger', 'garlic', 'pea', 'banana', 'apple', 'pear', 'grapes', 'orange', 'kiwi', 'watermelon', 'pomegranate', 'pineapple', 'mango']
 
+@app.route('/poll', methods=['POST','GET'])
+def poll():
+    global form
+    form = Restrictions()
+    if form.validate_on_submit():
+        return redirect(url_for('form'))
+    return render_template('poll.html', form=form)
+
+
+
+@app.route('/results', methods=['POST','GET'])
+def results():
+    global answer
+    answer = request.form['q1']
+    return render_template('results.html', answer=answer)
+
+@app.route('/')
 @app.route('/form', methods=['POST'])
 def form():
-  message = request.get_json(force=True)
-  flag = True
-  while flag:
-    if message['name'] in veg_fruit:
-      bbc_url = 'https://www.bbc.co.uk/food/' + message['name']
-      flag = False
-    else:
-      response = {
-        'error': 'Please enter a food in our database'
-      }
-      return jsonify(response)
+    message = request.get_json(force=True)
+    flag = True
+    while flag:
+        if message['name'] in veg_fruit:
+            if answer == "None":
+                bbc_url = 'https://www.bbc.co.uk/food/' + message['name']
+                flag = False
+            else:
+                bbc_url = 'https://www.bbc.co.uk/food/search?q='+message['name']+answer
+        else:
+            response = {
+                'error': 'Please enter a food in our database'
+            }
+            return jsonify(response)
 
   driver = webdriver.Chrome(PATH)
   req = requests.get(bbc_url).text

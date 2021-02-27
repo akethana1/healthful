@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import requests
 import random
+import time
 # MACHINE LEARNING
 import base64
 import io
@@ -30,11 +31,12 @@ def preprocess_image(img, target_size):
   img = np.expand_dims(img, axis=0)
   return img
 
-
-
-# WEB SCRAPING
+# WEB SCRAPING GLOBAL VARIABLES
 PATH = "./chromedriver"
-veg_fruit = ['cucumber', 'carrot', 'capsicum', 'onion', 'potato', 'tomato', 'beetroot', 'cabbage', 'lettuce', 'spinach', 'cauliflower', 'turnip', 'corn', 'sweetcorn', 'sweet_potato', 'paprika', 'ginger', 'garlic', 'pea', 'banana', 'apple', 'pear', 'grapes', 'orange', 'kiwi', 'watermelon', 'pomegranate', 'pineapple', 'mango']
+veg_fruit = ['apple', 'banana', 'beetroot', 'bell_pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli_pepper', 'corn', 'cucumber', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy_beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelo']
+
+
+answer = 'None'
 
 @app.route('/form', methods=['POST'])
 def form():
@@ -42,8 +44,11 @@ def form():
   flag = True
   while flag:
     if message['name'] in veg_fruit:
-      bbc_url = 'https://www.bbc.co.uk/food/' + message['name']
-      flag = False
+      if answer == "None":
+        bbc_url = 'https://www.bbc.co.uk/food/' + message['name']
+        flag = False
+      else:
+        bbc_url = 'https://www.bbc.co.uk/food/search?q='+message['name']+answer
     else:
       response = {
         'error': 'Please enter a food in our database'
@@ -60,15 +65,100 @@ def form():
     if '/food/recipes/' in urls['href']:
       url_list.append('https://www.bbc.co.uk' + urls['href'])
 
-  final_url = url_list[random.randint(0, len(url_list))]
-  driver.get(final_url)
+  # randomizes the recipe that will be picked for that certain ingredient
+  final_url = url_list[random.randint(0, len(url_list)-1)]
+  url_list.remove(final_url)
+  final_url1 = url_list[random.randint(0, len(url_list)-1)]
+  url_list.remove(final_url1)
+  final_url2 = url_list[random.randint(0, len(url_list)-1)]
+  url_list.remove(final_url2)
+  driver.get(final_url)  # open up the recipe's url for parsing and getting html data
 
-  div = driver.find_element_by_class_name('recipe-ingredients-wrapper')
-  ingredients = div.text
-  div2 = driver.find_element_by_class_name('recipe-method-wrapper')
-  method = div2.text
+
+  req = requests.get(final_url).text
+  soup2 = BeautifulSoup(req, 'lxml')
+  try:
+      img = soup2.find("div", {"class": "recipe-media"}).find("img")
+      image = img['src']
+      print(image + '\n')
+  except:
+      print('There is no image \n')
+
+  prep = soup2.find('div', class_="recipe-leading-info")
+  prep = prep.find_all('div', class_="gel-pica")
+  print(prep[0].text)
+  print(prep[1].text)
+  print(prep[2].text)
+
+  title = driver.find_element_by_class_name('gel-trafalgar')
+  print('Title:' + title.text +'\n')
+
+  div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+  print(div.text)
+  div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+  print('\n')
+  print(div2.text)
+  print('------------------------------------------------------------------------------------------\n')
+
+
+  driver.get(final_url1)
+  req = requests.get(final_url1).text
+  soup2 = BeautifulSoup(req, 'lxml')
+  try:
+    img = soup2.find("div", {"class": "recipe-media"}).find("img")
+    image = img['src']
+    print(image + '\n')
+  except:
+    print('There is no image \n')
+
+  prep = soup2.find('div', class_="recipe-leading-info")
+  prep = prep.find_all('div', class_="gel-pica")
+  print(prep[0].text)
+  print(prep[1].text)
+  print(prep[2].text)
+
+  title = driver.find_element_by_class_name('gel-trafalgar')
+  print('Title:' + title.text +'\n')
+
+  div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+  print(div.text)
+  div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+  print('\n')
+  print(div2.text)
+  print('------------------------------------------------------------------------------------------\n')
+
+  driver.get(final_url2)
+  req = requests.get(final_url2).text
+  soup2 = BeautifulSoup(req, 'lxml')
+  try:
+    img = soup2.find("div", {"class": "recipe-media"}).find("img")
+    image = img['src']
+    print(image + '\n')
+  except:
+    print('There is no image \n')
+
+  prep = soup2.find('div', class_="recipe-leading-info")
+  prep = prep.find_all('div', class_="gel-pica")
+  print(prep[0].text)
+  print(prep[1].text)
+  print(prep[2].text)
+
+  title = driver.find_element_by_class_name('gel-trafalgar')
+  print('Title:' + title.text +'\n')
+
+  div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+  print(div.text)
+  div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+  print('\n')
+  print(div2.text)
+
+  time.sleep(5)
+  driver.close()
 
   response = {
+    'title': title,
+    'image': image,
+    'prep': prep,
     'urls': url_list,
     'ingredients': ingredients,
     'method': method
@@ -97,17 +187,13 @@ def predict():
   max=0
   label_loc=0
   for i in range (0,len(output_data[0])):
-      if(output_data[0][i]>max):
-          max=output_data[0][i]
-          label_loc=i
+    if(output_data[0][i]>max):
+      max=output_data[0][i]
+      label_loc=i
   prediction = label_array[label_loc]
-
-
-
   response = {
     'prediction': prediction
   }
-
   return jsonify(response)
 
 if __name__ == "__main__":

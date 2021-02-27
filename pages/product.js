@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function Product() {
-  const [content, setContent] = useState();
-
   useEffect(() => {
     const fileInput = document.querySelector('.FILE-INPUT');
     const selectedImage = document.querySelector('.SELECTED-IMAGE');
@@ -69,7 +67,7 @@ export default function Product() {
         <label htmlFor='vegetarian'>Vegetarian</label>
       </form>
 
-      <p>{content}</p>
+      <p></p>
     </main>
   );
 }

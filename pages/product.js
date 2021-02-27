@@ -4,24 +4,14 @@ export default function Product() {
   const [content, setContent] = useState();
 
   useEffect(() => {
-    const fileInput = document.querySelector('.FILE-INPUT');
-    const selectedImage = document.querySelector('.SELECTED-IMAGE');
-    const predictButton = document.querySelector('.PREDICT-BUTTON');
-    const dogPrediction = document.querySelector('.DOG-PREDICTION');
-    const catPrediction = document.querySelector('.CAT-PREDICTION');
-    let base64Image;
-
-    fileInput.addEventListener('change', () => {
-      let reader = new FileReader();
-      console.log(reader);
-      reader.onload = () => {
-        let dataURL = reader.result;
-        console.log(dataURL);
-      };
-    });
-
     const textInput = document.querySelector('.TEXT-INPUT');
     const submitButton = document.querySelector('.SUBMIT-BUTTON');
+    const fileInput = document.querySelector('.FILE-INPUT');
+    const selectedImage = document.querySelector('.SELECTED-IMAGE');
+
+    fileInput.addEventListener('change', (e) => {
+      selectedImage.src = URL.createObjectURL(e.target.files[0]);
+    });
 
     submitButton.addEventListener('click', () => {
       let message = {
@@ -43,18 +33,9 @@ export default function Product() {
   return (
     <main>
       <label htmlFor='ml-food'>Upload an image</label>
-      <input type='file' id='ml-food' className='FILE-INPUT' />
+      <input type='file' id='ml-food' accept='.jpg' className='FILE-INPUT' />
       <img src='' className='SELECTED-IMAGE' />
       <button className='PREDICT-BUTTON'>Predict</button>
-      <div>
-        <h2>Predictions</h2>
-        <p>
-          Dog: <span className='DOG-PREDICTION'></span>
-        </p>
-        <p>
-          Cat: <span className='CAT-PREDICTION'></span>
-        </p>
-      </div>
 
       <label htmlFor='food' className='block mt-96'>
         Or choose a fruit/vegetable

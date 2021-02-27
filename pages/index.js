@@ -1,6 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import Navbar from '../components/Navbar';
 import Menu from '../components/Menu';
@@ -25,7 +23,7 @@ export default function Home() {
         <Navbar />
         <div className='absolute bottom-12 flex w-full items-end px-12'>
           <div className='flex-1'>
-            <h1 className='font-serif text-white text-4xl leading-tight'>
+            <h1 className='font-serif text-white text-4xl leading-tight pr-16'>
               <span className='block'>Curated Recipes,</span>
               <span className='block'>Using Machine Learning</span>
             </h1>

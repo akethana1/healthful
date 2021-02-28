@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import HamburgerMenu from '../components/HamburgerMenu';
+import HamburgerMenu from './HamburgerMenu';
 
 export default function Navbar() {
   return (

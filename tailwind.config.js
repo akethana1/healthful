@@ -13,6 +13,7 @@ module.exports = {
         '4xl': '2.75rem',
       },
       spacing: {
+        108: '40rem',
         128: '48rem',
       },
       zIndex: {

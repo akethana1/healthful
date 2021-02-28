@@ -28,7 +28,7 @@ export default function Home() {
               <span className='block'>Using Machine Learning</span>
             </h1>
             <a
-              href='#showcase'
+              href='/product'
               className='SHOWCASE-LINK mt-8 inline-flex items-center gap-2'
             >
               <p className='SHOWCASE-LINK-TEXT font-bold text-gray-400 transition-colors duration-300'>
@@ -66,19 +66,6 @@ export default function Home() {
           </a>
         </div>
       </main>
-
-      <section className='pt-64 container-homepage mx-auto px-6' id='showcase'>
-        <h2 className='font-serif text-gray-800 text-3xl'>
-          Take "boring" and "unhealthy" out of your meals
-        </h2>
-        <h2 className='font-serif text-gray-800 text-3xl'>
-          Only the best recipes for your available ingredients
-        </h2>
-        <h2 className='font-serif text-gray-800 text-3xl'>
-          Powered by advanced machine learning algorithms
-        </h2>
-        <div className='h-screen'></div>
-      </section>
     </Layout>
   );
 }

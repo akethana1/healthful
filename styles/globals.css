@@ -8,12 +8,16 @@
   }
 
   body {
-    @apply bg-gray-100;
+    background-color: #f6fafc;
   }
 }
 
 @layer utilities {
   .container-homepage {
+    max-width: 1080px;
+  }
+
+  .container-page {
     max-width: 1080px;
   }
 
@@ -113,4 +117,10 @@
 .SHOWCASE-LINK:hover .SHOWCASE-LINK-ARROW-2 {
   transform: translateX(38px);
   opacity: 0;
+}
+
+.navbar-blur {
+  position: sticky;
+  top: 0;
+  backdrop-filter: saturate(180%) blur(30px);
 }

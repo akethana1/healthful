@@ -20,7 +20,7 @@ export default function Product() {
   };
 
   const handleIngredients = (ingredients) => {
-    return ingredients.slice(12);
+    return ingredients.map((ingredient) => <li> - {ingredient}</li>);
   };
 
   const handlePrepTime = (prep1) => {
@@ -163,24 +163,30 @@ export default function Product() {
             </div>
           </section>
 
-          <section>
+          <section className='pb-36'>
             <h2 className='text-4xl font-serif text-gray-800 mt-40'>
               {recipe.title}
             </h2>
             <img src={recipe.image} className='mt-8 max-w-xl pb-16' />
             <h3 className='text-gray-800 text-3xl font-serif'>Ingredients</h3>
-            <p className='mt-6 leading-loose'>
+            <ul className='mt-6 leading-loose'>
               {handleIngredients(recipe.ingredients)}
-            </p>
+            </ul>
             <h3 className='text-gray-800 text-3xl font-serif mt-8'>
               Instructions
             </h3>
             <p className='mt-6 leading-loose'>{handleMethod(recipe.method)}</p>
-            <h3 className='text-gray-800 text-3xl font-serif'>Prep Time</h3>
+            <h3 className='text-gray-800 text-3xl font-serif mt-8'>
+              Prep Time
+            </h3>
             <p className='mt-6'>{handlePrepTime(recipe.prep1)}</p>
-            <h3 className='text-gray-800 text-3xl font-serif'>Cooking Time</h3>
+            <h3 className='text-gray-800 text-3xl font-serif mt-8'>
+              Cooking Time
+            </h3>
             <p className='mt-6'>{handleCookingTime(recipe.prep2)}</p>
-            <h3 className='text-gray-800 text-3xl font-serif'>Serving Size</h3>
+            <h3 className='text-gray-800 text-3xl font-serif mt-8'>
+              Serving Size
+            </h3>
             <p className='mt-6'>{handleServes(recipe.prep3)}</p>
           </section>
         </div>

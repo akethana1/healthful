@@ -8,7 +8,7 @@ export default function Product() {
   const [recipe, setRecipe] = useState({
     title: '',
     image: '',
-    ingredients: '',
+    ingredients: [],
     method: '',
     prep1: '',
     prep2: '',

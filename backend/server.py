@@ -48,7 +48,7 @@ def form():
         bbc_url = 'https://www.bbc.co.uk/food/' + message['name']
         flag = False
       else:
-        bbc_url = 'https://www.bbc.co.uk/food/search?q='+message['name']+answer
+        bbc_url = 'https://www.bbc.co.uk/food/search?q='+message['name']+"+"+answer
     else:
       response = {
         'error': 'Please enter a food in our database'

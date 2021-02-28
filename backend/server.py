@@ -36,7 +36,6 @@ PATH = "./chromedriver"
 veg_fruit = ['apple', 'banana', 'beetroot', 'bell_pepper', 'cabbage', 'capsicum', 'carrot', 'cauliflower', 'chilli_pepper', 'corn', 'cucumber', 'eggplant', 'garlic', 'ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion', 'orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato', 'raddish', 'soy_beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelo']
 
 
-answer = 'None'
 
 @app.route('/form', methods=['POST'])
 def form():
@@ -48,7 +47,7 @@ def form():
         bbc_url = 'https://www.bbc.co.uk/food/' + message['name']
         flag = False
       else:
-        bbc_url = 'https://www.bbc.co.uk/food/search?q='+message['name']+answer
+        bbc_url = 'https://www.bbc.co.uk/food/search?q='+message['name']+"+"+answer
     else:
       response = {
         'error': 'Please enter a food in our database'

@@ -55,7 +55,9 @@ def form():
       }
       return jsonify(response)
 
-  driver = webdriver.Chrome(PATH)
+  options = webdriver.ChromeOptions()
+  options.add_argument('headless')
+  driver = webdriver.Chrome(PATH, options=options)
   req = requests.get(bbc_url).text
   soup = BeautifulSoup(req, 'lxml')
 
@@ -72,98 +74,109 @@ def form():
   url_list.remove(final_url1)
   final_url2 = url_list[random.randint(0, len(url_list)-1)]
   url_list.remove(final_url2)
-  driver.get(final_url)  # open up the recipe's url for parsing and getting html data
 
+
+
+
+
+
+  driver.get(final_url)  # open up the recipe's url for parsing and getting html data
 
   req = requests.get(final_url).text
   soup2 = BeautifulSoup(req, 'lxml')
   try:
-      img = soup2.find("div", {"class": "recipe-media"}).find("img")
-      image = img['src']
-      print(image + '\n')
-  except:
-      print('There is no image \n')
-
-  prep = soup2.find('div', class_="recipe-leading-info")
-  prep = prep.find_all('div', class_="gel-pica")
-  print(prep[0].text)
-  print(prep[1].text)
-  print(prep[2].text)
-
-  title = driver.find_element_by_class_name('gel-trafalgar')
-  print('Title:' + title.text +'\n')
-
-  div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
-  print(div.text)
-  div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
-  print('\n')
-  print(div2.text)
-  print('------------------------------------------------------------------------------------------\n')
-
-
-  driver.get(final_url1)
-  req = requests.get(final_url1).text
-  soup2 = BeautifulSoup(req, 'lxml')
-  try:
     img = soup2.find("div", {"class": "recipe-media"}).find("img")
     image = img['src']
-    print(image + '\n')
   except:
-    print('There is no image \n')
+    image = False
 
   prep = soup2.find('div', class_="recipe-leading-info")
   prep = prep.find_all('div', class_="gel-pica")
+
+  title = driver.find_element_by_class_name('gel-trafalgar').text
+
+  ingredients = driver.find_element_by_class_name('recipe-ingredients-wrapper').text # gets the ingredients for the recipe
+  method = driver.find_element_by_class_name('recipe-method-wrapper').text # gets the method or steps to make the recipe
+
   print(prep[0].text)
   print(prep[1].text)
   print(prep[2].text)
+  print(image)
+  print(title)
+  print(ingredients)
+  print(method)
 
-  title = driver.find_element_by_class_name('gel-trafalgar')
-  print('Title:' + title.text +'\n')
 
-  div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
-  print(div.text)
-  div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
-  print('\n')
-  print(div2.text)
-  print('------------------------------------------------------------------------------------------\n')
-
-  driver.get(final_url2)
-  req = requests.get(final_url2).text
-  soup2 = BeautifulSoup(req, 'lxml')
-  try:
-    img = soup2.find("div", {"class": "recipe-media"}).find("img")
-    image = img['src']
-    print(image + '\n')
-  except:
-    print('There is no image \n')
-
-  prep = soup2.find('div', class_="recipe-leading-info")
-  prep = prep.find_all('div', class_="gel-pica")
-  print(prep[0].text)
-  print(prep[1].text)
-  print(prep[2].text)
-
-  title = driver.find_element_by_class_name('gel-trafalgar')
-  print('Title:' + title.text +'\n')
-
-  div = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
-  print(div.text)
-  div2 = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
-  print('\n')
-  print(div2.text)
-
-  time.sleep(5)
   driver.close()
 
   response = {
-    'title': title,
+    'prep1': prep[0].text,
+    'prep2': prep[1].text,
+    'prep3': prep[2].text,
     'image': image,
-    'prep': prep,
-    'urls': url_list,
+    'title': title,
     'ingredients': ingredients,
     'method': method
   }
   return jsonify(response)
+
+
+
+
+  # driver.get(final_url1)
+  # req = requests.get(final_url1).text
+  # soup2 = BeautifulSoup(req, 'lxml')
+  # try:
+  #   img = soup2.find("div", {"class": "recipe-media"}).find("img")
+  #   image = img['src']
+  # except:
+  #   response = {
+  #     'error': 'No img in this website'
+  #   }
+  #   return jsonify(response)
+
+  # prep = soup2.find('div', class_="recipe-leading-info")
+  # prep = prep.find_all('div', class_="gel-pica")
+
+  # title = driver.find_element_by_class_name('gel-trafalgar')
+
+  # ingredients = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+  # method = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+
+
+
+
+
+
+  # driver.get(final_url2)
+  # req = requests.get(final_url2).text
+  # soup2 = BeautifulSoup(req, 'lxml')
+  # try:
+  #   img = soup2.find("div", {"class": "recipe-media"}).find("img")
+  #   image = img['src']
+  # except:
+  #   response = {
+  #     'error': 'No img in this website'
+  #   }
+  #   return jsonify(response)
+
+  # prep = soup2.find('div', class_="recipe-leading-info")
+  # prep = prep.find_all('div', class_="gel-pica")
+
+  # title = driver.find_element_by_class_name('gel-trafalgar')
+
+  # ingredients = driver.find_element_by_class_name('recipe-ingredients-wrapper') # gets the ingredients for the recipe
+  # method = driver.find_element_by_class_name('recipe-method-wrapper') # gets the method or steps to make the recipe
+
+
+
+
+
+
+
+
+
+
 
 
 
